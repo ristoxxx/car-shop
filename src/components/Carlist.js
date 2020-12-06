@@ -3,16 +3,26 @@ import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 
 function Carlist () {
     const [cars, setCars] = useState([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         getCars();
     }, [])
+
+    const handleOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
 
     const getCars = () => {
         fetch('http://carrestapi.herokuapp.com/cars')
@@ -27,6 +37,7 @@ function Carlist () {
             method: 'DELETE'
         })
         .then(_ => getCars())
+        .then(_ => handleOpen())
         console.log(params.value);
         }
     }
@@ -43,8 +54,8 @@ function Carlist () {
             field: '_links.self.href',
             width: 90,
             cellRendererFramework: params => 
-            <IconButton onClick={() => deleteCar(params)}>
-                <DeleteIcon />
+            <IconButton color="secondary" onClick={() => deleteCar(params)}>
+                <DeleteIcon fontSize="small"/>
             </IconButton>
         }
     ]
@@ -61,6 +72,13 @@ function Carlist () {
 
         </AgGridReact>
         </div>
+        <Snackbar
+            open={open}
+            onClose={handleClose}
+            autoHideDuration={2020}
+            message="Car deleted succesfully"
+
+        />
     </div>
     );
 }

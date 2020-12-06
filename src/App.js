@@ -3,10 +3,8 @@ import Carlist from './components/Carlist'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="App">      
         <Carlist />
-      </header>
     </div>
   );
 }

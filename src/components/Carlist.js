@@ -7,6 +7,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import AddCar from './AddCar';
+
 
 function Carlist () {
     const [cars, setCars] = useState([]);
@@ -42,6 +44,18 @@ function Carlist () {
         }
     }
 
+    const addCar = (newCar) => {
+        fetch('http://carrestapi.herokuapp.com/cars', {
+            method: 'POST',
+            headers: {
+                'Content-type' : 'application/json'
+            },
+            body: JSON.stringify(newCar)
+        })
+        .then(response => getCars())
+        .catch(err => console.error(err)) 
+    }
+
     const columns = [
         {field: 'brand', sortable: true, filter: true},
         {field: 'model', sortable: true, filter: true},
@@ -62,6 +76,7 @@ function Carlist () {
 
     return (
     <div>
+        <AddCar addCar={addCar}/>
         <div className="ag-theme-material" style={{ height: 600, width: '90%', margin: 'auto' }}>
         <AgGridReact
             rowData={cars}

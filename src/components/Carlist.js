@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import AddCar from './AddCar';
+import EditCar from './EditCar';
 
 
 function Carlist () {
@@ -56,6 +57,18 @@ function Carlist () {
         .catch(err => console.error(err)) 
     }
 
+    const updateCar = (link, car) => {
+        fetch(link, {
+          method: 'PUT',
+          headers: {
+              'Content-type' : 'application/json'
+          },
+          body: JSON.stringify(car)  
+        })
+        .then(response => getCars())
+        .catch(err => console.error(err))
+    }
+
     const columns = [
         {field: 'brand', sortable: true, filter: true},
         {field: 'model', sortable: true, filter: true},
@@ -66,12 +79,20 @@ function Carlist () {
         {
             headerName: '',
             field: '_links.self.href',
-            width: 90,
+            width: 70,
+            cellRendererFramework: params => <EditCar updateCar={updateCar} params={params} />
+            
+        },
+        {
+            headerName: '',
+            field: '_links.self.href',
+            width: 50,
             cellRendererFramework: params => 
             <IconButton color="secondary" onClick={() => deleteCar(params)}>
                 <DeleteIcon fontSize="small"/>
             </IconButton>
-        }
+        },
+        
     ]
 
     return (
